@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Vertical Layout App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans p-6">
+
+<h1 class="text-3xl font-bold text-center mb-6">📊 Info Dashboard</h1>
+
+<div class="flex flex-col gap-6 max-w-xl mx-auto">
+
+    <!-- Weather Box -->
+    <div class="bg-white shadow rounded p-6">
+        <h2 class="text-xl font-semibold mb-4 text-blue-700">🌦 Weather</h2>
+        <input id="city-input" type="text" placeholder="Enter city" class="border p-2 w-full rounded mb-2" />
+        <button onclick="fetchWeather()" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Check Weather</button>
+        <div id="weather-info" class="mt-4 font-medium"></div>
+    </div>
+
+    <!-- Quote Box -->
+    <div class="bg-white shadow rounded p-6">
+        <h2 class="text-xl font-semibold mb-4 text-purple-700">💬 Random Quote</h2>
+        <button onclick="fetchQuote()" class="bg-purple-600 text-white px-4 py-2 rounded w-full">Get Quote</button>
+        <div id="quote" class="mt-4 italic text-center text-gray-700"></div>
+    </div>
+
+    <!-- Random User Box -->
+    <div class="bg-white shadow rounded p-6">
+        <h2 class="text-xl font-semibold mb-4 text-green-700">🧍 Random User</h2>
+        <button onclick="fetchUser()" class="bg-green-600 text-white px-4 py-2 rounded w-full">Generate User</button>
+        <div id="user-info" class="mt-4 text-sm space-y-1 text-left"></div>
+    </div>
+
+</div>
+
+<script>
+    function fetchUser() {
+      fetch('/api/user')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('user-info').innerHTML = `
+            <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
+            <p><strong>Email:</strong> ${data.email}</p>
+            <p><strong>Phone:</strong> ${data.phone}</p>
+            <p><strong>Address:</strong> ${data.address}</p>
+          `;
+        });
+    }
+
+    function fetchQuote() {
+      fetch('/api/quote')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('quote').textContent = `"${data.quote}"`;
+        });
+    }
+
+    function fetchWeather() {
+      const city = document.getElementById('city-input').value || 'London';
+      fetch(`/api/weather?city=${city}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('weather-info').textContent = `Weather in ${city}: ${data.weather}`;
+        });
+    }
+</script>
+
+</body>
+</html>
